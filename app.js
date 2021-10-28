@@ -33,7 +33,7 @@ const URL = 'https://jsonplaceholder.typicode.com'
 
 const fetchUsers = async () => {
     try {
-        const response = await fetch('${URL}/users')
+        const response = await fetch (`${URL}/users`)
         const data = await response.json()
         users = data
     } catch (e) {
@@ -70,7 +70,7 @@ const selectUser = (user) => {
  */
 const fetchTasksByUser = async (userId) => {
     try {
-        const response = await fetch('${URL}/todos?userId=${userId}')
+        const response = await fetch(`${URL}/todos?userId=${userId}`)
         posts = await response.json()
         tasks = tasksList
     } catch (e) {
@@ -100,7 +100,7 @@ const selectTask = (task) => {
  */
 const fetchPosts = async (userId) => {
     try {
-        const response = await fetch('${URL}/posts?userId=${userId}')
+        const response = await fetch(`${URL}/posts?userId=${userId}`)
         posts = await response.json()
     } catch (e) {
         concole.log(e)
@@ -113,7 +113,7 @@ const fetchPosts = async (userId) => {
 
 const fetchAlbums = async (userId) => {
     try {
-        const response = await fetch('${URL}/albums?userId=${userId}')
+        const response = await fetch(`${URL}/albums?userId=${userId}`)
         albums = await response.json()
     } catch (e) {
         console.log(e)
