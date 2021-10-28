@@ -9,22 +9,22 @@
 /*  Full Info, Tasks, Posts, Albums */
 
 /*
-1. Create Arrays: users, tasks, albums
+1. Create Arrays: users, tasks, posts, albums
 3. Main function
 2. users: Fetch users;
 Render users + create div + eventListener.
  */
+const userList = document.querySelector('#userList')
+const tabs = document.querySelector('#tabs')
+const infoBox = document.querySelector('#infoBox')
+
 
 let users = []
 let tasks = []
+let posts = []
 let albums = []
 
-const main = () => {
-    selectUser()
-    fetchTasksByUser()
-    selectTask()
-}
-main()
+const URL = 'https://jsonplaceholder.typicode.com'
 
 /**
  * we take users from URL/users
@@ -33,11 +33,11 @@ main()
 
 const fetchUsers = async () => {
     try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users')
+        const response = await fetch('${URL}/users')
         const data = await response.json()
         users = data
     } catch (e) {
-        consol.log(e)
+        console.log(e)
     }
     renderUsers();
 }
@@ -48,40 +48,81 @@ const renderUsers = () => {
         userEle.className = 'left-item'
         userEle.textContent = user.name
         userEle.addEventListener('click', () => {
-            selectUser = (user)
-            })
-            userList.append(userEle)
+            // alert(JSON.stringify(user))
+            // console.log(JSON.stringify(user))
+            //
+            // const selectUser = (user) => {
+            //     console.log(JSON.stringify(user))
+            // }
+            selectUser(user)
         })
-        const selectUser = (user) => {
-        }
+        // const userList = document.getElementById('userList')
+        userList.append(userEle)
+    })
+}
+const selectUser = (user) => {
+    console.log(JSON.stringify(user))
+}
 
-        /**
-         * we select todos by userId
-         * https://jsonplaceholder.typicode.com/todos
-         */
-        const fetchTasksByUser = async (userId) => {
-            try {
-                const response = await fetch('https://jsonplaceholder.typicode.com/todos?userId')
-                const tasksList = await response.json()
-                tasks = tasksList
-            } catch (e) {
-                console.log(e)
-            }
-        }
 
-        /**
-         * all tasks should be displayed depending on selected userId
-         */
-        const renderTasksByUser = () => {
-            tasksList.forEach(task => {
-                const taskEle = document.createElement('div')
-                taskEle.className = 'right-item'
-                taskEle.textContent = task.title
-                taskEle.addEventListener('click', () => {
-                    selectTask = (task)
-                })
-                tasksList.append(taskEle)
-            })
-        }
-                // const selectTask = (task) => {
-                // } Uncaught SyntaxError: Unexpected end of input ???
+/**
+ * tasks
+ */
+const fetchTasksByUser = async (userId) => {
+    try {
+        const response = await fetch('${URL}/todos?userId=${userId}')
+        posts = await response.json()
+        tasks = tasksList
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
+const renderTasksByUser = () => {
+    tasksList.forEach(task => {
+        const taskEle = document.createElement('div')
+        taskEle.className = 'right-item'
+        taskEle.textContent = task.title
+        taskEle.addEventListener('click', () => {
+            let selectTask = (task)
+        })
+        const tabs = document.getElementById('tabs')
+        tabs.append(taskEle)
+    })
+}
+const selectTask = (task) => {
+}
+
+/**
+ *
+ * posts
+ */
+const fetchPosts = async (userId) => {
+    try {
+        const response = await fetch('${URL}/posts?userId=${userId}')
+        posts = await response.json()
+    } catch (e) {
+        concole.log(e)
+    }
+}
+/**
+ *
+ * albums
+ */
+
+const fetchAlbums = async (userId) => {
+    try {
+        const response = await fetch('${URL}/albums?userId=${userId}')
+        albums = await response.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
+const main = () => {
+    fetchUsers()
+}
+
+main()
