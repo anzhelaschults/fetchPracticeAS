@@ -33,7 +33,7 @@ const URL = 'https://jsonplaceholder.typicode.com'
 
 const fetchUsers = async () => {
     try {
-        const response = await fetch (`${URL}/users`)
+        const response = await fetch(`${URL}/users`)
         const data = await response.json()
         users = data
     } catch (e) {
@@ -64,65 +64,81 @@ const selectUser = (user) => {
     console.log(JSON.stringify(user))
 }
 
-
-/**
- * tasks
- */
-const fetchTasksByUser = async (userId) => {
+const fetchAllInfo = async () => {
     try {
-        const response = await fetch(`${URL}/todos?userId=${userId}`)
-        posts = await response.json()
-        tasks = tasksList
+        const response = await fetch(`${URL}/users`);
+        users = await response.json();
     } catch (e) {
-        console.log(e)
+        workWithError(e);
     }
-}
 
-
-const renderTasksByUser = () => {
-    tasksList.forEach(task => {
-        const taskEle = document.createElement('div')
-        taskEle.className = 'right-item'
-        taskEle.textContent = task.title
-        taskEle.addEventListener('click', () => {
-            let selectTask = (task)
-        })
-        const tabs = document.getElementById('tabs')
-        tabs.append(taskEle)
+    renderAllInfo();
+};
+const renderAllInfo = () => {
+    users.forEach(user => {
+        const allUserData = document.createElement('div');
+        // infoBox.textContent = `${user.username} ${user.email}`;
+        infoBox.append(infoBox);
     })
-}
-const selectTask = (task) => {
-}
 
-/**
- *
- * posts
- */
-const fetchPosts = async (userId) => {
-    try {
-        const response = await fetch(`${URL}/posts?userId=${userId}`)
-        posts = await response.json()
-    } catch (e) {
-        concole.log(e)
+    /**
+     * tasks
+     */
+    const fetchTasksByUser = async (userId) => {
+        try {
+            const response = await fetch(`${URL}/todos?userId=${userId}`)
+            posts = await response.json()
+            tasks = tasksList
+        } catch (e) {
+            console.log(e)
+        }
     }
-}
-/**
- *
- * albums
- */
 
-const fetchAlbums = async (userId) => {
-    try {
-        const response = await fetch(`${URL}/albums?userId=${userId}`)
-        albums = await response.json()
-    } catch (e) {
-        console.log(e)
+
+    const renderTasksByUser = () => {
+        tasksList.forEach(task => {
+            const taskEle = document.createElement('div')
+            taskEle.className = 'right-item'
+            taskEle.textContent = task.title
+            taskEle.addEventListener('click', () => {
+                let selectTask = (task)
+            })
+            const tabs = document.getElementById('tabs')
+            tabs.append(taskEle)
+        })
     }
-}
+    const selectTask = (task) => {
+    }
+
+    /**
+     *
+     * posts
+     */
+    const fetchPosts = async (userId) => {
+        try {
+            const response = await fetch(`${URL}/posts?userId=${userId}`)
+            posts = await response.json()
+        } catch (e) {
+            concole.log(e)
+        }
+    }
+    /**
+     *
+     * albums
+     */
+
+    const fetchAlbums = async (userId) => {
+        try {
+            const response = await fetch(`${URL}/albums?userId=${userId}`)
+            albums = await response.json()
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
 
-const main = () => {
-    fetchUsers()
-}
+    const main = () => {
+        fetchUsers()
+    }
 
-main()
+    main() }
