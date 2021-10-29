@@ -23,6 +23,7 @@ let users = []
 let tasks = []
 let posts = []
 let albums = []
+let activeUser = null
 
 const URL = 'https://jsonplaceholder.typicode.com'
 
@@ -48,97 +49,103 @@ const renderUsers = () => {
         userEle.className = 'left-item'
         userEle.textContent = user.name
         userEle.addEventListener('click', () => {
-            // alert(JSON.stringify(user))
-            // console.log(JSON.stringify(user))
-            //
-            // const selectUser = (user) => {
-            //     console.log(JSON.stringify(user))
-            // }
+
             selectUser(user)
         })
-        // const userList = document.getElementById('userList')
         userList.append(userEle)
     })
 }
 const selectUser = (user) => {
-    console.log(JSON.stringify(user))
+    activeUser = user
+    // console.log(JSON.stringify(user))
+    renderFullInfo()
+    fetchAlbums(user.id)
+    fetchPosts(user.id)
+    fetchTasksByUser(user.id)
 }
 
-const fetchAllInfo = async () => {
+const renderFullInfo = () => {
+    infoBox.innerHTML=''
+    const userInfo = document.createElement('div');
+    infoBox.append(userInfo);
+    userInfo.innerHTML = `
+    <h2>${activeUser.name}</h2>
+    <p>${activeUser.username}</p>
+    <p>${activeUser.email}</p>
+    <p>${activeUser.address.street}, ${activeUser.address.suite}, ${activeUser.address.city}, ${activeUser.address.zipcode}</p>
+    `;
+}
+
+/**
+ * tasks
+ */
+const fetchTasksByUser = async (userId) => {
     try {
-        const response = await fetch(`${URL}/users`);
-        users = await response.json();
+        const response = await fetch(`${URL}/todos?userId=${userId}`)
+        tasks = await response.json()
     } catch (e) {
-        workWithError(e);
+        console.log(e)
     }
+}
 
-    renderAllInfo();
-};
-const renderAllInfo = () => {
-    users.forEach(user => {
-        const allUserData = document.createElement('div');
-        // infoBox.textContent = `${user.username} ${user.email}`;
-        infoBox.append(infoBox);
+const renderTasksByUser = () => {
+    infoBox.innerHTML =''
+    tasks.forEach(task => {
+        const taskEle = document.createElement('div')
+        taskEle.className = 'right-item'
+        taskEle.textContent = task.title
+        infoBox.append(taskEle)
     })
+}
 
-    /**
-     * tasks
-     */
-    const fetchTasksByUser = async (userId) => {
-        try {
-            const response = await fetch(`${URL}/todos?userId=${userId}`)
-            posts = await response.json()
-            tasks = tasksList
-        } catch (e) {
-            console.log(e)
-        }
+/**
+ *
+ * posts
+ */
+const fetchPosts = async (userId) => {
+    try {
+        const response = await fetch(`${URL}/posts?userId=${userId}`)
+        posts = await response.json()
+    } catch (e) {
+        concole.log(e)
+    }
+}
+/**
+ *
+ * albums
+ */
+
+const fetchAlbums = async (userId) => {
+    try {
+        const response = await fetch(`${URL}/albums?userId=${userId}`)
+        albums = await response.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+tabs.addEventListener('click', (event) => {
+    event.preventDefault()
+    if (!activeUser) return
+    tabs.querySelectorAll('a').forEach(link =>{
+        link.classList.remove('active')
+    })
+    event.target.classList.add('active')
+    switch (event.target.id) {
+        case "taskLink":
+            renderTasksByUser()
+            break
+        case "fullInfoLink":
+            renderFullInfo()
+            break
+        default:
+            return
     }
 
+})
 
-    const renderTasksByUser = () => {
-        tasksList.forEach(task => {
-            const taskEle = document.createElement('div')
-            taskEle.className = 'right-item'
-            taskEle.textContent = task.title
-            taskEle.addEventListener('click', () => {
-                let selectTask = (task)
-            })
-            const tabs = document.getElementById('tabs')
-            tabs.append(taskEle)
-        })
-    }
-    const selectTask = (task) => {
-    }
+const main = () => {
+    fetchUsers()
+}
 
-    /**
-     *
-     * posts
-     */
-    const fetchPosts = async (userId) => {
-        try {
-            const response = await fetch(`${URL}/posts?userId=${userId}`)
-            posts = await response.json()
-        } catch (e) {
-            concole.log(e)
-        }
-    }
-    /**
-     *
-     * albums
-     */
-
-    const fetchAlbums = async (userId) => {
-        try {
-            const response = await fetch(`${URL}/albums?userId=${userId}`)
-            albums = await response.json()
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-
-    const main = () => {
-        fetchUsers()
-    }
-
-    main() }
+main()
